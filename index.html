@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Watch Bearer</title>
+    <!-- Google Fonts for cinematic pirate typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <!-- Fullscreen Canvas for background, sea, Black Pearl, dock, pirate -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- UI Overlay for top-left title & menu, plus modals -->
+    <div id="ui-overlay">
+      <!-- Top Left Branding & Menu -->
+      <header class="menu-container">
+        <h1 class="game-title">
+          <span class="title-the">THE</span>
+          <span class="title-main">WATCH BEARER</span>
+        </h1>
+        <nav class="main-menu">
+          <button id="btn-new-voyage" class="menu-btn">
+            <span class="btn-bullet">✦</span>
+            <span class="btn-text">NEW VOYAGE</span>
+          </button>
+          <button id="btn-continue" class="menu-btn" disabled>
+            <span class="btn-bullet">✦</span>
+            <span class="btn-text">CONTINUE</span>
+          </button>
+          <button id="btn-settings" class="menu-btn">
+            <span class="btn-bullet">✦</span>
+            <span class="btn-text">SETTINGS</span>
+          </button>
+          <button id="btn-quit" class="menu-btn">
+            <span class="btn-bullet">✦</span>
+            <span class="btn-text">QUIT</span>
+          </button>
+        </nav>
+      </header>
+
+      <!-- Modal Container -->
+      <div id="modal-overlay" class="modal-overlay hidden">
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal-card hidden">
+          <h2 class="modal-title">SETTINGS</h2>
+          <div class="modal-content">
+            <div class="setting-row">
+              <label for="setting-graphics">Graphics Quality</label>
+              <select id="setting-graphics">
+                <option value="high">Cinematic (High)</option>
+                <option value="medium">Medium</option>
+                <option value="low">Performance (Low)</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <label for="setting-waves">Ocean Detail</label>
+              <select id="setting-waves">
+                <option value="dynamic">Dynamic Waves</option>
+                <option value="simple">Simple Waves</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <button id="btn-reset-save" class="danger-btn">RESET SAVED DATA</button>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button id="btn-close-settings" class="action-btn">BACK</button>
+          </div>
+        </div>
+
+        <!-- Quit Confirmation Modal -->
+        <div id="quit-modal" class="modal-card hidden">
+          <h2 class="modal-title">LEAVE SHORE?</h2>
+          <p class="modal-desc">Are you sure you wish to step away from the watch?</p>
+          <div class="modal-actions">
+            <button id="btn-confirm-quit" class="action-btn danger">YES, LEAVE</button>
+            <button id="btn-cancel-quit" class="action-btn">RETURN</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Intro / Narrative Placeholder for New Voyage -->
+      <div id="intro-screen" class="intro-screen hidden">
+        <div class="intro-content">
+          <h2 class="intro-heading">THE CHRONICLES OF TIDE AND GOLD</h2>
+          <p class="intro-text">
+            The fog thickens over Old Dead Man’s Pier. In your palm, the heavy golden watch ticks with a pulse not born of springs or gears...
+          </p>
+          <button id="btn-intro-back" class="action-btn">RETURN TO TITLE</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
