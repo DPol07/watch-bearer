@@ -1,4 +1,4 @@
-// SeaLayer.ts - Renders ocean water, moonlight shimmer lane, and ambient wave motion
+// SeaLayer.ts - Renders ocean water, atmospheric moonlight reflection, and organic wave movement
 
 export class SeaLayer {
   public render(ctx: CanvasRenderingContext2D, width: number, height: number, time: number) {
@@ -9,108 +9,117 @@ export class SeaLayer {
 
     // 1. Base Sea Gradient (Deep atmospheric ocean)
     const seaGrad = ctx.createLinearGradient(0, horizonY, 0, height);
-    seaGrad.addColorStop(0.0, '#0a172c');
-    seaGrad.addColorStop(0.2, '#071122');
-    seaGrad.addColorStop(0.6, '#040916');
-    seaGrad.addColorStop(1.0, '#02050b');
+    seaGrad.addColorStop(0.0, '#091528');
+    seaGrad.addColorStop(0.25, '#06101f');
+    seaGrad.addColorStop(0.65, '#040814');
+    seaGrad.addColorStop(1.0, '#020408');
 
     ctx.fillStyle = seaGrad;
     ctx.fillRect(0, horizonY, width, seaHeight);
 
-    // 2. Soft Ambient Moon Beam / Reflection Column on Water Surface
+    // 2. Soft Atmospheric Moonlight Surface Glow (Natural trapezoidal reflection path)
     const moonX = width * 0.66;
-    const laneWidthTop = width * 0.06;
-    const laneWidthBottom = width * 0.38;
+    const topWidth = width * 0.08;
+    const bottomWidth = width * 0.42;
 
-    const beamGrad = ctx.createLinearGradient(0, horizonY, 0, height);
-    beamGrad.addColorStop(0.0, 'rgba(195, 225, 255, 0.22)');
-    beamGrad.addColorStop(0.25, 'rgba(145, 195, 250, 0.12)');
-    beamGrad.addColorStop(0.65, 'rgba(85, 140, 210, 0.05)');
-    beamGrad.addColorStop(1.0, 'rgba(30, 70, 130, 0.01)');
+    const surfaceGlow = ctx.createLinearGradient(0, horizonY, 0, height);
+    surfaceGlow.addColorStop(0.0, 'rgba(180, 215, 255, 0.20)');
+    surfaceGlow.addColorStop(0.3, 'rgba(120, 175, 240, 0.10)');
+    surfaceGlow.addColorStop(0.7, 'rgba(60, 115, 190, 0.04)');
+    surfaceGlow.addColorStop(1.0, 'rgba(20, 50, 110, 0.01)');
 
-    ctx.fillStyle = beamGrad;
+    ctx.fillStyle = surfaceGlow;
     ctx.beginPath();
-    ctx.moveTo(moonX - laneWidthTop * 0.5, horizonY);
-    ctx.lineTo(moonX + laneWidthTop * 0.5, horizonY);
-    ctx.lineTo(moonX + laneWidthBottom * 0.5, height);
-    ctx.lineTo(moonX - laneWidthBottom * 0.5, height);
+    ctx.moveTo(moonX - topWidth * 0.5, horizonY);
+    ctx.lineTo(moonX + topWidth * 0.5, horizonY);
+    ctx.lineTo(moonX + bottomWidth * 0.5, height);
+    ctx.lineTo(moonX - bottomWidth * 0.5, height);
     ctx.closePath();
     ctx.fill();
 
-    // 3. Organic Moonlight Water Ripples / Specular Shimmer
-    const numRippleRows = 90;
-    for (let i = 0; i < numRippleRows; i++) {
-      const progress = i / numRippleRows; // 0 at horizon, 1 at screen bottom
-      const y = horizonY + Math.pow(progress, 1.4) * seaHeight;
+    // Secondary Radial Glow directly near horizon beneath moon
+    const moonBaseGlow = ctx.createRadialGradient(moonX, horizonY, 2, moonX, horizonY + 60, width * 0.2);
+    moonBaseGlow.addColorStop(0.0, 'rgba(210, 235, 255, 0.28)');
+    moonBaseGlow.addColorStop(0.5, 'rgba(130, 185, 245, 0.08)');
+    moonBaseGlow.addColorStop(1.0, 'rgba(0, 0, 0, 0)');
 
-      // Current width of reflection column at depth y
-      const currentLaneWidth = laneWidthTop + (laneWidthBottom - laneWidthTop) * progress;
+    ctx.fillStyle = moonBaseGlow;
+    ctx.fillRect(0, horizonY, width, 180);
 
-      // Draw multiple organic wave fragments per row
-      const fragmentsInRow = Math.floor(2 + progress * 6);
-      for (let f = 0; f < fragmentsInRow; f++) {
-        const fragProgress = (f + 0.5) / fragmentsInRow;
+    // 3. Organic Specular Water Shimmer (Sparse, natural shimmering streaks rather than blocky stacked ladder lines)
+    const sparkleCount = 45;
+    for (let i = 0; i < sparkleCount; i++) {
+      // Deterministic depth placement along perspective
+      const depthFactor = (i + 1) / sparkleCount; // 0 near horizon, 1 near bottom
+      const y = horizonY + Math.pow(depthFactor, 1.6) * seaHeight;
 
-        // Offset wave center organically within the lane
-        const wavePhase = time * 2.2 + progress * 14 + f * 1.7;
-        const waveOffset = Math.sin(wavePhase) * (2 + progress * 8);
-        const centerOffset = (fragProgress - 0.5) * currentLaneWidth * 0.85;
+      // Perspective width at current depth
+      const currentLaneWidth = topWidth + (bottomWidth - topWidth) * depthFactor;
 
-        const rx = moonX + centerOffset + waveOffset;
+      // Smooth horizontal motion across the lane
+      const wavePhase = time * 1.8 + i * 2.37;
+      const horizontalOffset = Math.sin(wavePhase) * (currentLaneWidth * 0.35);
+      const cx = moonX + horizontalOffset;
 
-        // Distance from central moon line controls alpha falloff
-        const distFromCenter = Math.abs(rx - moonX) / (currentLaneWidth * 0.5);
-        const centerFalloff = Math.max(0, 1 - Math.pow(distFromCenter, 1.8));
+      // Falloff based on distance from center
+      const distFromCenter = Math.abs(cx - moonX) / (currentLaneWidth * 0.5);
+      if (distFromCenter > 1.0) continue;
 
-        // Length and stroke width scale with perspective
-        const baseLength = (12 + progress * 65) * (0.4 + 0.6 * Math.sin(time * 1.5 + f * 2) ** 2);
-        const fragLength = baseLength * centerFalloff;
+      const centerAlpha = Math.max(0, 1 - Math.pow(distFromCenter, 2));
 
-        if (fragLength < 2) continue;
+      // Shimmer streak dimensions
+      const streakLength = (15 + depthFactor * 85) * (0.6 + 0.4 * Math.sin(time * 2.5 + i * 1.7));
+      const streakHeight = Math.max(0.8, depthFactor * 2.2);
 
-        const lineWidth = Math.max(0.8, progress * 2.8);
-        const alpha = (1 - progress * 0.6) * centerFalloff * (0.25 + 0.4 * Math.abs(Math.sin(wavePhase)));
+      // Pulse opacity
+      const opacity = (0.15 + 0.35 * Math.pow(Math.sin(time * 3.1 + i * 1.1), 2)) * centerAlpha * (1 - depthFactor * 0.5);
 
-        ctx.strokeStyle = `rgba(220, 240, 255, ${alpha})`;
-        ctx.lineWidth = lineWidth;
-        ctx.lineCap = 'round';
-
-        ctx.beginPath();
-        const startX = rx - fragLength * 0.5;
-        const endX = rx + fragLength * 0.5;
-        const midX = rx;
-        const midY = y + Math.sin(wavePhase) * (0.8 + progress * 1.8);
-
-        ctx.moveTo(startX, y);
-        ctx.quadraticCurveTo(midX, midY, endX, y);
-        ctx.stroke();
-      }
-    }
-
-    // 4. Subtle Full-Width Ocean Waves & Swells
-    const waveRows = 20;
-    for (let r = 0; r < waveRows; r++) {
-      const rowProg = r / waveRows;
-      const wy = horizonY + Math.pow(rowProg, 1.35) * seaHeight;
-      const rowAlpha = 0.05 + rowProg * 0.12;
-
-      ctx.strokeStyle = `rgba(125, 170, 220, ${rowAlpha})`;
-      ctx.lineWidth = 0.8 + rowProg * 1.6;
+      ctx.strokeStyle = `rgba(230, 245, 255, ${opacity})`;
+      ctx.lineWidth = streakHeight;
+      ctx.lineCap = 'round';
 
       ctx.beginPath();
-      const waveFreq = 0.007 - rowProg * 0.0035;
-      const waveSpeed = time * (1.1 + rowProg * 0.7);
+      const sx = cx - streakLength * 0.5;
+      const ex = cx + streakLength * 0.5;
+      const waveCurve = Math.sin(wavePhase * 2) * (0.5 + depthFactor * 1.5);
 
-      for (let x = 0; x <= width; x += 35) {
-        const offset = Math.sin(x * waveFreq + waveSpeed + r * 1.3) * (1.2 + rowProg * 3.5);
+      ctx.moveTo(sx, y);
+      ctx.quadraticCurveTo(cx, y + waveCurve, ex, y);
+      ctx.stroke();
+    }
+
+    // 4. Smooth Ocean Swells & Horizon Water Horizon Line
+    const swellCount = 12;
+    for (let s = 0; s < swellCount; s++) {
+      const sProg = s / swellCount;
+      const sy = horizonY + Math.pow(sProg, 1.4) * seaHeight;
+      const sAlpha = 0.04 + sProg * 0.08;
+
+      ctx.strokeStyle = `rgba(140, 185, 230, ${sAlpha})`;
+      ctx.lineWidth = 0.7 + sProg * 1.5;
+
+      ctx.beginPath();
+      const waveFreq = 0.005 - sProg * 0.0025;
+      const waveSpeed = time * (0.8 + sProg * 0.6);
+
+      for (let x = 0; x <= width; x += 40) {
+        const offset = Math.sin(x * waveFreq + waveSpeed + s * 1.7) * (1.0 + sProg * 3.0);
         if (x === 0) {
-          ctx.moveTo(x, wy + offset);
+          ctx.moveTo(x, sy + offset);
         } else {
-          ctx.lineTo(x, wy + offset);
+          ctx.lineTo(x, sy + offset);
         }
       }
       ctx.stroke();
     }
+
+    // Gentle crisp horizon edge
+    ctx.strokeStyle = 'rgba(160, 205, 245, 0.18)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, horizonY);
+    ctx.lineTo(width, horizonY);
+    ctx.stroke();
 
     ctx.restore();
   }
