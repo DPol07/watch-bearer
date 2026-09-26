@@ -31,20 +31,20 @@ export class PirateLayer {
     ctx.ellipse(0, 4, 38, 12, -0.05, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. Leather Pirate Boots & Legs (Sturdy, realistic pirate stance)
-    // Left Leg & Boot (Grounded slightly behind)
+    // 2. Leather Pirate Boots & Legs
+    // Left Leg & Boot
     ctx.fillStyle = silhouetteDark;
     ctx.beginPath();
     ctx.moveTo(-18, 0);
-    ctx.quadraticCurveTo(-26, -20, -22, -45); // Calf & Boot Top
-    ctx.quadraticCurveTo(-15, -55, -8, -60);  // Knee
+    ctx.quadraticCurveTo(-26, -20, -22, -45);
+    ctx.quadraticCurveTo(-15, -55, -8, -60);
     ctx.lineTo(-2, -60);
-    ctx.quadraticCurveTo(-8, -35, -5, -20);   // Inner leg
+    ctx.quadraticCurveTo(-8, -35, -5, -20);
     ctx.lineTo(-4, 0);
     ctx.closePath();
     ctx.fill();
 
-    // Boot cuff turn-down left
+    // Boot cuff left
     ctx.beginPath();
     ctx.moveTo(-25, -42);
     ctx.quadraticCurveTo(-15, -46, -6, -42);
@@ -52,7 +52,7 @@ export class PirateLayer {
     ctx.closePath();
     ctx.fill();
 
-    // Right Leg & Boot (Stepped slightly forward/right)
+    // Right Leg & Boot
     ctx.beginPath();
     ctx.moveTo(6, 0);
     ctx.quadraticCurveTo(0, -20, 4, -45);
@@ -63,7 +63,7 @@ export class PirateLayer {
     ctx.closePath();
     ctx.fill();
 
-    // Boot cuff turn-down right
+    // Boot cuff right
     ctx.beginPath();
     ctx.moveTo(2, -42);
     ctx.quadraticCurveTo(13, -46, 22, -42);
@@ -71,7 +71,7 @@ export class PirateLayer {
     ctx.closePath();
     ctx.fill();
 
-    // Boot Heel & Sole outlines
+    // Boot outlines
     ctx.strokeStyle = moonlightRim;
     ctx.lineWidth = 1.0;
     ctx.beginPath();
@@ -79,10 +79,10 @@ export class PirateLayer {
     ctx.moveTo(0, -18); ctx.quadraticCurveTo(3, -2, 6, 0);
     ctx.stroke();
 
-    // 3. Flowing Captain's Frock Coat Tails (Wind blowing seaward)
+    // 3. Flowing Coat Tails
     ctx.fillStyle = coatDark;
 
-    // Left Coat Tail (Flowing out in wind)
+    // Left Coat Tail
     ctx.beginPath();
     ctx.moveTo(-16, -62);
     ctx.quadraticCurveTo(-42 + breeze, -48, -48 + breeze * 1.2, -20);
@@ -108,17 +108,17 @@ export class PirateLayer {
     ctx.quadraticCurveTo(-42 + breeze, -48, -48 + breeze * 1.2, -20);
     ctx.stroke();
 
-    // 4. Torso, Waist Sash & Leather Belt
+    // 4. Torso, Sash & Belt
     ctx.fillStyle = silhouetteDark;
     ctx.beginPath();
     ctx.moveTo(-20, -62 + breath * 0.3);
-    ctx.quadraticCurveTo(-26, -90 + breath * 0.6, -24, -118 + breath); // Left ribcage
-    ctx.quadraticCurveTo(0, -122 + breath, 20, -118 + breath);          // Shoulders back
+    ctx.quadraticCurveTo(-26, -90 + breath * 0.6, -24, -118 + breath);
+    ctx.quadraticCurveTo(0, -122 + breath, 20, -118 + breath);
     ctx.quadraticCurveTo(22, -90 + breath * 0.6, 18, -62 + breath * 0.3);
     ctx.closePath();
     ctx.fill();
 
-    // Crimson / Dark Leather Waist Sash
+    // Waist Sash
     ctx.fillStyle = beltDark;
     ctx.beginPath();
     ctx.moveTo(-22, -72 + breath * 0.3);
@@ -128,12 +128,12 @@ export class PirateLayer {
     ctx.closePath();
     ctx.fill();
 
-    // Weathered Brass Belt Buckle
+    // Belt Buckle (Simple Path, No Symbols)
     ctx.strokeStyle = goldTrim;
     ctx.lineWidth = 1.6;
     ctx.strokeRect(-5, -71 + breath * 0.3, 10, 10);
 
-    // Diagonal Baldric Leather Strap (Sword shoulder belt across back)
+    // Diagonal Baldric Strap
     ctx.strokeStyle = '#050a14';
     ctx.lineWidth = 6;
     ctx.beginPath();
@@ -141,7 +141,7 @@ export class PirateLayer {
     ctx.lineTo(-18, -66 + breath * 0.3);
     ctx.stroke();
 
-    // Cutlass Scabbard & Guard Hilt hanging at left hip
+    // Cutlass Scabbard & Guard Hilt
     ctx.strokeStyle = silhouetteDark;
     ctx.lineWidth = 4;
     ctx.beginPath();
@@ -155,11 +155,11 @@ export class PirateLayer {
     ctx.arc(-20, -68, 6, 0, Math.PI * 2);
     ctx.stroke();
 
-    // 5. Left Arm (Hanging naturally at side)
+    // 5. Left Arm
     ctx.fillStyle = silhouetteDark;
     ctx.beginPath();
     ctx.moveTo(-24, -116 + breath);
-    ctx.quadraticCurveTo(-36, -95 + breath * 0.5, -28, -72 + breath * 0.2); // Sleeve curve
+    ctx.quadraticCurveTo(-36, -95 + breath * 0.5, -28, -72 + breath * 0.2);
     ctx.quadraticCurveTo(-20, -72, -18, -108 + breath);
     ctx.closePath();
     ctx.fill();
@@ -172,13 +172,12 @@ export class PirateLayer {
     ctx.quadraticCurveTo(-36, -95 + breath * 0.5, -28, -72 + breath * 0.2);
     ctx.stroke();
 
-    // 6. Right Arm & Cupped Hands (Gently inspecting the watch near chest)
-    // Upper right arm / sleeve
+    // 6. Right Arm & Cupped Hands
     ctx.fillStyle = silhouetteDark;
     ctx.beginPath();
     ctx.moveTo(18, -116 + breath);
-    ctx.quadraticCurveTo(30, -100 + breath * 0.5, 24, -88 + breath * 0.2); // Elbow
-    ctx.quadraticCurveTo(12, -80, 2, -94 + breath * 0.3);                  // Forearm
+    ctx.quadraticCurveTo(30, -100 + breath * 0.5, 24, -88 + breath * 0.2);
+    ctx.quadraticCurveTo(12, -80, 2, -94 + breath * 0.3);
     ctx.lineTo(12, -110 + breath);
     ctx.closePath();
     ctx.fill();
@@ -192,31 +191,27 @@ export class PirateLayer {
     ctx.arc(handX, handY, 6, 0, Math.PI * 2);
     ctx.fill();
 
-    // 7. Head & Classic Tricorn Hat (3/4 Back Pose, tilted downward with intention)
+    // 7. Head & Tricorn Hat
     const headX = -2;
     const headY = -130 + breath;
 
-    // Head / Neck Profile
+    // Head Profile
     ctx.fillStyle = silhouetteDark;
     ctx.beginPath();
     ctx.arc(headX, headY, 12, 0, Math.PI * 2);
     ctx.fill();
 
-    // Tricorn Hat (Curved, authentic pirate hat silhouette)
+    // Tricorn Hat
     ctx.fillStyle = '#02040b';
     ctx.beginPath();
-    // Left Brim tip
     ctx.moveTo(headX - 26, headY - 2);
-    // Front brim sweep down
     ctx.quadraticCurveTo(headX - 6, headY + 2, headX + 22, headY - 1);
-    // Right turn-up brim curve
     ctx.quadraticCurveTo(headX + 18, headY - 28, headX, headY - 24);
-    // Back turn-up brim sweep back to left tip
     ctx.quadraticCurveTo(headX - 14, headY - 26, headX - 26, headY - 2);
     ctx.closePath();
     ctx.fill();
 
-    // Elegant Gold Trim Braid along Tricorn Brim
+    // Gold Trim along Brim
     ctx.strokeStyle = goldTrim;
     ctx.lineWidth = 1.4;
     ctx.stroke();
@@ -234,7 +229,7 @@ export class PirateLayer {
     ctx.quadraticCurveTo(headX - 22, headY + 14, -24, -116 + breath);
     ctx.stroke();
 
-    // 8. THE MYSTERIOUS GOLDEN WATCH GLINT & AMBER ILLUMINATION
+    // 8. GOLDEN WATCH GLINT & AMBER ILLUMINATION
     const glintFlicker = 0.78 + 0.22 * Math.sin(time * 3.5) + 0.1 * Math.sin(time * 6.0);
 
     // Warm Golden Radial Ambient Light
@@ -251,13 +246,13 @@ export class PirateLayer {
     ctx.arc(handX, handY, 28, 0, Math.PI * 2);
     ctx.fill();
 
-    // Subtle Golden Watch Specular Sparkle in Cupped Hands
+    // Golden Watch Specular Sparkle in Cupped Hands
     ctx.fillStyle = `rgba(255, 245, 190, ${0.90 * glintFlicker})`;
     ctx.beginPath();
     ctx.arc(handX - 1, handY - 1, 2.2, 0, Math.PI * 2);
     ctx.fill();
 
-    // Golden Ambient Light Reflection on bowed face & collar
+    // Golden Ambient Light Reflection on bowed face
     ctx.strokeStyle = `rgba(255, 210, 110, ${0.65 * glintFlicker})`;
     ctx.lineWidth = 1.4;
     ctx.beginPath();

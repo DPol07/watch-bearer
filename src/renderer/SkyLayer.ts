@@ -11,7 +11,7 @@ export interface Star {
 
 export class SkyLayer {
   private stars: Star[] = [];
-  private numStars = 240;
+  private numStars = 220;
 
   constructor() {
     this.initStars();
@@ -23,7 +23,7 @@ export class SkyLayer {
       this.stars.push({
         x: Math.random(),
         y: Math.random() * 0.52, // Sky occupies upper half
-        radius: Math.random() < 0.85 ? Math.random() * 1.1 + 0.4 : Math.random() * 1.6 + 1.2,
+        radius: Math.random() < 0.85 ? Math.random() * 1.1 + 0.4 : Math.random() * 1.5 + 0.8,
         baseAlpha: Math.random() * 0.65 + 0.35,
         twinkleSpeed: Math.random() * 2.5 + 0.8,
         phase: Math.random() * Math.PI * 2,
@@ -44,7 +44,7 @@ export class SkyLayer {
     ctx.fillStyle = skyGradient;
     ctx.fillRect(0, 0, width, horizonY + 20);
 
-    // 2. Render Stars with Twinkle & Subtle Light Flares
+    // 2. Render Stars with Twinkle
     ctx.save();
     for (const star of this.stars) {
       const sx = star.x * width;
@@ -56,16 +56,6 @@ export class SkyLayer {
       ctx.beginPath();
       ctx.arc(sx, sy, star.radius, 0, Math.PI * 2);
       ctx.fill();
-
-      // Subtle starburst flare for bright stars
-      if (star.radius > 2) {
-        ctx.strokeStyle = `rgba(228, 240, 255, ${clampedAlpha * 0.35})`;
-        ctx.lineWidth = 0.6;
-        ctx.beginPath();
-        ctx.moveTo(sx - 5, sy); ctx.lineTo(sx + 5, sy);
-        ctx.moveTo(sx, sy - 5); ctx.lineTo(sx, sy + 5);
-        ctx.stroke();
-      }
     }
     ctx.restore();
 
@@ -118,7 +108,7 @@ export class SkyLayer {
     ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Organic Soft Lunar Surface Maria (Maria / Texture without harsh circles)
+    // Organic Soft Lunar Surface Maria
     ctx.fillStyle = 'rgba(120, 150, 190, 0.11)';
     ctx.beginPath();
     ctx.ellipse(moonX - moonRadius * 0.25, moonY - moonRadius * 0.1, moonRadius * 0.3, moonRadius * 0.2, -0.3, 0, Math.PI * 2);
