@@ -6,7 +6,7 @@ export class HorizonLayer {
     ctx.save();
 
     // Layer 1: Far Distant Mountain Range (Softest, highest atmospheric haze)
-    ctx.fillStyle = '#101a2f';
+    ctx.fillStyle = '#14223d';
     ctx.beginPath();
     ctx.moveTo(0, horizonY);
 
@@ -52,7 +52,7 @@ export class HorizonLayer {
     ctx.fillRect(0, horizonY - height * 0.09, width, height * 0.09);
 
     // Layer 2: Mid-Distant Island Silhouettes (Darker, sharper contours)
-    ctx.fillStyle = '#0a1221';
+    ctx.fillStyle = '#0f1c33';
 
     // Left Island Group
     ctx.beginPath();
@@ -73,8 +73,8 @@ export class HorizonLayer {
     ctx.fill();
 
     // Subtle Moonlight Highlights on Island Ridges facing moon (Moon is at ~0.66)
-    ctx.strokeStyle = 'rgba(180, 210, 250, 0.18)';
-    ctx.lineWidth = 1.2;
+    ctx.strokeStyle = 'rgba(200, 230, 255, 0.42)';
+    ctx.lineWidth = 1.8;
 
     // Highlight on center-right island peak
     ctx.beginPath();

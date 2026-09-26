@@ -7,12 +7,12 @@ export class SeaLayer {
 
     ctx.save();
 
-    // 1. Base Sea Gradient (Deep atmospheric ocean)
+    // 1. Base Sea Gradient (Lifted ocean darkness with translucent deep teal/blue tones)
     const seaGrad = ctx.createLinearGradient(0, horizonY, 0, height);
-    seaGrad.addColorStop(0.0, '#091528');
-    seaGrad.addColorStop(0.25, '#06101f');
-    seaGrad.addColorStop(0.65, '#040814');
-    seaGrad.addColorStop(1.0, '#020408');
+    seaGrad.addColorStop(0.0, '#0d203a');
+    seaGrad.addColorStop(0.25, '#0a192e');
+    seaGrad.addColorStop(0.65, '#071223');
+    seaGrad.addColorStop(1.0, '#040a16');
 
     ctx.fillStyle = seaGrad;
     ctx.fillRect(0, horizonY, width, seaHeight);

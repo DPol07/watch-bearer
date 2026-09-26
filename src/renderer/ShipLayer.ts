@@ -23,13 +23,22 @@ export class ShipLayer {
     ctx.rotate(pitchAngle);
     ctx.scale(shipScale, shipScale);
 
-    // Ship Colors (Black Pearl aesthetic)
-    const hullColor = '#060a12';
-    const sailColor = '#0b121e';
-    const highlightColor = 'rgba(190, 220, 255, 0.4)';
+    // Ship Colors (Black Pearl aesthetic with distinct contrast & rim light)
+    const hullColor = '#0c1526';
+    const sailColor = '#121f36';
+    const highlightColor = 'rgba(215, 240, 255, 0.75)';
+
+    // 0. Soft Backlight Glow around ship silhouette
+    const shipBacklight = ctx.createRadialGradient(0, -30, 10, 0, -30, 90);
+    shipBacklight.addColorStop(0, 'rgba(160, 205, 255, 0.22)');
+    shipBacklight.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = shipBacklight;
+    ctx.beginPath();
+    ctx.arc(0, -30, 90, 0, Math.PI * 2);
+    ctx.fill();
 
     // 1. Ship Wake / Water Ripples beneath hull
-    ctx.fillStyle = 'rgba(160, 205, 255, 0.22)';
+    ctx.fillStyle = 'rgba(180, 225, 255, 0.35)';
     ctx.beginPath();
     ctx.ellipse(-30, 8, 45, 4, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -147,8 +156,8 @@ export class ShipLayer {
     ctx.stroke();
 
     // 5. Rigging Lines
-    ctx.strokeStyle = 'rgba(10, 18, 30, 0.7)';
-    ctx.lineWidth = 0.6;
+    ctx.strokeStyle = 'rgba(140, 180, 220, 0.45)';
+    ctx.lineWidth = 0.8;
     ctx.beginPath();
     // Stays
     ctx.moveTo(-82, -21);
