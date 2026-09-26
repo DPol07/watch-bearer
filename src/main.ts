@@ -1,5 +1,6 @@
 // main.ts - Application entry point, canvas setup, and UI menu state controller
 
+import './style.css';
 import { CanvasRenderer } from './renderer/CanvasRenderer';
 
 const SAVE_KEY = 'watch_bearer_save_v1';
@@ -156,7 +157,9 @@ class App {
   }
 }
 
-// Instantiate application on DOM ready
-window.addEventListener('DOMContentLoaded', () => {
+// Instantiate application when script loads
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', () => new App());
+} else {
   new App();
-});
+}
