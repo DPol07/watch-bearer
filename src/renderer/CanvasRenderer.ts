@@ -46,6 +46,7 @@ export class CanvasRenderer {
 
   public setQuality(quality: 'high' | 'medium' | 'low') {
     this.quality = quality;
+    this.handleResize();
   }
 
   public getQuality(): string {
@@ -54,17 +55,19 @@ export class CanvasRenderer {
 
   private handleResize() {
     const maxDpr = this.quality === 'low' ? 1 : 2;
-    const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const rawDpr = window.devicePixelRatio || 1;
+    const dpr = Math.max(1, Math.min(rawDpr, maxDpr));
 
-    this.canvas.width = width * dpr;
-    this.canvas.height = height * dpr;
+    const width = Math.max(window.innerWidth || document.documentElement.clientWidth || 320, 100);
+    const height = Math.max(window.innerHeight || document.documentElement.clientHeight || 240, 100);
+
+    this.canvas.width = Math.floor(width * dpr);
+    this.canvas.height = Math.floor(height * dpr);
     this.canvas.style.width = `${width}px`;
     this.canvas.style.height = `${height}px`;
 
-    this.ctx.resetTransform();
-    this.ctx.scale(dpr, dpr);
+    // Universal transform reset across all browsers (Chrome, Firefox, Safari, Edge)
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   public start() {
@@ -81,22 +84,26 @@ export class CanvasRenderer {
   }
 
   private render(now: number) {
-    const elapsed = (now - this.startTime) / 1000; // seconds
+    try {
+      const elapsed = (now - this.startTime) / 1000; // seconds
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+      const width = window.innerWidth || document.documentElement.clientWidth || 320;
+      const height = window.innerHeight || document.documentElement.clientHeight || 240;
 
-    // Clear Screen
-    this.ctx.fillStyle = '#030611';
-    this.ctx.fillRect(0, 0, width, height);
+      // Clear Screen
+      this.ctx.fillStyle = '#030611';
+      this.ctx.fillRect(0, 0, width, height);
 
-    // Render Layers in Composition Hierarchy
-    this.skyLayer.render(this.ctx, width, height, elapsed);
-    this.horizonLayer.render(this.ctx, width, height, elapsed);
-    this.seaLayer.render(this.ctx, width, height, elapsed);
-    this.shipLayer.render(this.ctx, width, height, elapsed);
-    this.dockLayer.render(this.ctx, width, height, elapsed);
-    this.pirateLayer.render(this.ctx, width, height, elapsed);
+      // Render Layers in Composition Hierarchy
+      this.skyLayer.render(this.ctx, width, height, elapsed);
+      this.horizonLayer.render(this.ctx, width, height, elapsed);
+      this.seaLayer.render(this.ctx, width, height, elapsed);
+      this.shipLayer.render(this.ctx, width, height, elapsed);
+      this.dockLayer.render(this.ctx, width, height, elapsed);
+      this.pirateLayer.render(this.ctx, width, height, elapsed);
+    } catch (err) {
+      console.error('Canvas render error:', err);
+    }
 
     this.animId = requestAnimationFrame(this.render);
   }

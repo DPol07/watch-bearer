@@ -46,45 +46,47 @@ export class SeaLayer {
     ctx.fillStyle = moonBaseGlow;
     ctx.fillRect(0, horizonY, width, 180);
 
-    // 3. Organic Specular Water Shimmer (Sparse, natural shimmering streaks rather than blocky stacked ladder lines)
-    const sparkleCount = 45;
+    // 3. Organic Specular Water Shimmer (Scatter shimmer streaks naturally across depth & lane width)
+    const sparkleCount = 65;
     for (let i = 0; i < sparkleCount; i++) {
-      // Deterministic depth placement along perspective
-      const depthFactor = (i + 1) / sparkleCount; // 0 near horizon, 1 near bottom
-      const y = horizonY + Math.pow(depthFactor, 1.6) * seaHeight;
+      // Pseudo-random depth & horizontal placement using deterministic index hash
+      const seedY = Math.abs(Math.sin(i * 12.9898 + 0.1) * 43758.5453) % 1;
+      const seedX = (Math.sin(i * 78.233 + 0.2) * 43758.5453) % 1;
+
+      const depthFactor = 0.05 + seedY * 0.90; // Avoid extreme edges
+      const y = horizonY + Math.pow(depthFactor, 1.8) * seaHeight;
 
       // Perspective width at current depth
       const currentLaneWidth = topWidth + (bottomWidth - topWidth) * depthFactor;
 
-      // Smooth horizontal motion across the lane
-      const wavePhase = time * 1.8 + i * 2.37;
-      const horizontalOffset = Math.sin(wavePhase) * (currentLaneWidth * 0.35);
-      const cx = moonX + horizontalOffset;
+      // Natural scattered placement across the moonlight lane
+      const xOffset = seedX * currentLaneWidth * 0.75;
+      const wavePhase = time * (1.2 + (i % 5) * 0.25) + i * 1.7;
+      const drift = Math.sin(wavePhase) * (6 + depthFactor * 12);
+      const cx = moonX + xOffset + drift;
 
-      // Falloff based on distance from center
-      const distFromCenter = Math.abs(cx - moonX) / (currentLaneWidth * 0.5);
+      // Distance falloff from moon centerline
+      const distFromCenter = Math.abs(cx - moonX) / (currentLaneWidth * 0.55);
       if (distFromCenter > 1.0) continue;
 
-      const centerAlpha = Math.max(0, 1 - Math.pow(distFromCenter, 2));
+      const centerAlpha = Math.max(0, 1 - Math.pow(distFromCenter, 1.8));
 
-      // Shimmer streak dimensions
-      const streakLength = (15 + depthFactor * 85) * (0.6 + 0.4 * Math.sin(time * 2.5 + i * 1.7));
-      const streakHeight = Math.max(0.8, depthFactor * 2.2);
+      // Thinner, delicate organic shimmer streaks
+      const streakLength = (8 + depthFactor * 45) * (0.65 + 0.35 * Math.sin(time * 2.2 + i));
+      const streakHeight = 0.4 + depthFactor * 1.1;
 
-      // Pulse opacity
-      const opacity = (0.15 + 0.35 * Math.pow(Math.sin(time * 3.1 + i * 1.1), 2)) * centerAlpha * (1 - depthFactor * 0.5);
+      // Soft opacity pulsing
+      const opacity = (0.06 + 0.22 * Math.pow(Math.sin(time * 2.8 + i * 1.4), 2)) * centerAlpha * (1 - depthFactor * 0.35);
 
-      ctx.strokeStyle = `rgba(230, 245, 255, ${opacity})`;
+      ctx.strokeStyle = `rgba(225, 242, 255, ${opacity})`;
       ctx.lineWidth = streakHeight;
       ctx.lineCap = 'round';
 
       ctx.beginPath();
       const sx = cx - streakLength * 0.5;
       const ex = cx + streakLength * 0.5;
-      const waveCurve = Math.sin(wavePhase * 2) * (0.5 + depthFactor * 1.5);
-
       ctx.moveTo(sx, y);
-      ctx.quadraticCurveTo(cx, y + waveCurve, ex, y);
+      ctx.lineTo(ex, y);
       ctx.stroke();
     }
 
